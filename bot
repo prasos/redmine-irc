@@ -43,11 +43,15 @@ for( $i = count($atom->entry)-1; $i>=0; $i--) {
         $msg = "{$o['new_status']} {$o['tracker']} {$o['id']} by {$o['nick']}! {$o['title']} {$o['link']}";
     }
 
-    $msg = array_key_exists($o['project'], $conf->channels) ?
+    $msg_notice = array_key_exists($o['project'], $conf->channels) ?
         "NOTICE {$conf->channels->{$o['project']}} :$msg\n" :
         "NOTICE {$conf->default_channel} :{$o['project']}: $msg\n";
 
-    irc_raw("$msg");
+    irc_raw("$msg_notice");
+    if (@$conf->debug_target) {
+        // If debug target is set, output to that user/channel as well
+        irc_raw("NOTICE {$conf->debug_target} :{$o['project']}: $msg\n");
+    }
 }
 
 // Update the pointer
