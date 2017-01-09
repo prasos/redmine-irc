@@ -1,5 +1,7 @@
 <?php
 
+require_once(__DIR__.'/err.php');
+
 $network_curlh = curl_init();
 
 // Close cURL handle on shutdown. Not sure if really needed.
@@ -33,6 +35,7 @@ function irc_raw($msg) {
     if ($network_irc === NULL) {
         // Connect first
         $network_irc = fsockopen($conf->irc_host, $conf->irc_port);
+        if ($network_irc === FALSE) err("Unable to connect to IRC");
         fwrite($network_irc, "PASS {$conf->irc_pass}\nUSER\nNICK\n");
     }
     fwrite($network_irc, $msg);

@@ -8,9 +8,10 @@ connect to
 
 ## Installation
 
-Install the following:
+Install requirements on Debian/Ubuntu. Please match similar packages
+on other distributions.
 
-	php-cli php7.0-xml php-curl
+	sudo apt install php-cli php-xml php-curl
 
 Make configuration file
 
