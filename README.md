@@ -13,8 +13,36 @@ on other distributions.
 
 	sudo apt install php-cli php-xml php-curl
 
-Make configuration file
+Make configuration file:
 
-	cp config.json.example config.json
+	cp example/config.json config.json
 
-And edit it to match your setup
+And edit it to match your setup.
+
+Then run manually for the first time:
+
+	./bot
+
+## Systemd timer
+
+To get it running periodically, we use systemd. See example
+configurations in [example/](example/) subdirectory.
+
+Copy example files to systemd:
+
+```sh
+sudo cp example/redmine-irc.* /etc/systemd/system
+sudo chown root:root /etc/systemd/system/redmine-irc.*
+```
+
+Edit `/etc/systemd/system/redmine-irc.service` to match with your
+installation directory, user name, and group. Then run:
+
+```sh
+sudo systemctl daemon-reload
+sudo systemctl enable redmine-irc.timer
+sudo systemctl start redmine-irc.timer
+```
+
+That shoud keep it running for every 5 minutes. To change the running
+interval, edit `/etc/systemd/system/redmine-irc.timer`.

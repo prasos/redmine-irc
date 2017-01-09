@@ -1,0 +1,9 @@
+[Unit]
+Description=Prasos Redmine to IRC bot
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=YOUR_USER
+Group=YOUR_GROUP
+ExecStart=/YOUR/PATH/bot
