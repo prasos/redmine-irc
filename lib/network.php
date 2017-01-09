@@ -25,3 +25,15 @@ function curl_xml_get($url) {
 	// Try to decode JSON
     return simplexml_load_string($out);
 }
+
+// Send message to IRC. Connect if not yet done
+function irc_raw($msg) {
+    global $network_irc, $conf;
+
+    if ($network_irc === NULL) {
+        // Connect first
+        $network_irc = fsockopen($conf->irc_host, $conf->irc_port);
+        fwrite($network_irc, "PASS {$conf->irc_pass}\nUSER\nNICK\n");
+    }
+    fwrite($network_irc, $msg);
+}

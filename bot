@@ -47,7 +47,7 @@ for( $i = count($atom->entry)-1; $i>=0; $i--) {
         "NOTICE {$conf->channels->{$o['project']}} :$msg\n" :
         "NOTICE {$conf->default_channel} :{$o['project']}: $msg\n";
 
-    print("$msg");
+    irc_raw("$msg");
 }
 
 // Update the pointer
