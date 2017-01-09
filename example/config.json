@@ -1,5 +1,5 @@
 {
-    "feed": "https://redmine.prasos.fi/activity.atom?key=GET_IT_FROM_REDMINE",
+    "feed": "https://redmine.example.com/activity.atom?key=GET_IT_FROM_REDMINE",
     "irc_host": "localhost",
     "irc_port": 12345,
     "irc_pass": "IRSSIPROXY_PASSWORD",
