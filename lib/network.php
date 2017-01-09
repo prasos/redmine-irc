@@ -6,8 +6,11 @@ $network_curlh = curl_init();
 
 // Close cURL handle on shutdown. Not sure if really needed.
 register_shutdown_function (function() {
-    global $network_curlh;
+    global $network_curlh, $network_irc;
     curl_close($network_curlh);
+    if ($network_irc !== NULL) {
+        fclose($network_irc);
+    }
 });
 
 // Run cURL with user data and return the XML response
