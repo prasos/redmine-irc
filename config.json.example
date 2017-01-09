@@ -1,0 +1,15 @@
+{
+    "feed": "https://redmine.prasos.fi/activity.atom?key=GET_IT_FROM_REDMINE",
+    "irc_host": "localhost",
+    "irc_port": 12345,
+    "irc_pass": "IRSSIPROXY_PASSWORD",
+    "nicks": {
+	"jlehtonen@prasos.fi": "Zouppen",
+	"satoshi@example.com": "satoshi"
+    },
+    "channels": {
+	"Bitcoin Future": "#coinfuture",
+	"Denarium": "#denarium"
+    },
+    "default_channel": "#dev"
+}

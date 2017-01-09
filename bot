@@ -1,0 +1,54 @@
+#!/usr/bin/env php
+<?php // -*- mode: php; -*-
+
+require_once(__DIR__.'/lib/err.php');
+require_once(__DIR__.'/lib/network.php');
+
+$last = @file_get_contents(__DIR__.'/last_message.txt');
+$conf = json_decode(file_get_contents(__DIR__.'/config.json'));
+if ($conf === NULL) err("Parse error in configuration file!");
+
+// Fetch the Atom feed
+$atom = curl_xml_get($conf->feed);
+
+// Walk the array backwards (not using foreach for that reason)
+for( $i = count($atom->entry)-1; $i>=0; $i--) {
+    // Extract entry and skip it if it's already processed
+    $entry = $atom->entry[$i];
+    if ($entry->updated <= $last) continue;
+
+    // Match atom feed title
+    preg_match('/(.*) - ([^:]*): (.*)/', $entry->title, $fa);
+    preg_match('/([^ ]*) ([^ ]*)( \(([^\)]*)\))?/', $fa[2], $fb);
+
+    $email = (string)$entry->author->email ?: '-';
+
+    // To make it more readable:
+    $o = [
+        'project' => $fa[1],
+        'title' => $fa[3],
+        'tracker' => $fb[1],
+        'id' => $fb[2],
+        'new_status' => @$fb[4],
+        'link' => $entry->link->attributes()->href,
+        'nick' => @$conf->nicks->{$email} ?: $entry->author->name,
+    ];
+
+    // Format message
+    if ($o['tracker'] === 'Revision') {
+        $msg = "Commit to {$o['new_status']} by {$o['nick']}: {$o['title']} {$o['link']}";
+    } else if ($o['new_status'] === NULL) {
+        $msg = "Comment to {$o['id']} by {$o['nick']}: {$o['title']} {$o['link']}";
+    } else {
+        $msg = "{$o['new_status']} {$o['tracker']} {$o['id']} by {$o['nick']}! {$o['title']} {$o['link']}";
+    }
+
+    $msg = array_key_exists($o['project'], $conf->channels) ?
+        "NOTICE {$conf->channels->{$o['project']}} :$msg\n" :
+        "NOTICE {$conf->default_channel} :{$o['project']}: $msg\n";
+
+    print("$msg");
+}
+
+// Update the pointer
+file_put_contents(__DIR__.'/last_message.txt', $atom->entry[0]->updated);
