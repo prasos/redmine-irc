@@ -9,6 +9,7 @@ register_shutdown_function (function() {
     global $network_curlh, $network_irc;
     curl_close($network_curlh);
     if ($network_irc !== NULL) {
+        fwrite($network_irc, "QUIT :\n");
         fclose($network_irc);
     }
 });
